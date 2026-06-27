@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transporte de Pacientes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --surface-alt: #f1f0ec;
+      --border: rgba(0,0,0,0.1);
+      --border-strong: rgba(0,0,0,0.18);
+      --text: #1a1a18;
+      --text-sec: #5f5e5a;
+      --text-muted: #888780;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-bg: #eff6ff;
+      --accent-text: #1e40af;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --success-text: #15803d;
+      --warning-bg: #fefce8;
+      --warning-text: #854d0e;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-text: #b91c1c;
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110;
+        --surface: #1c1c1a;
+        --surface-alt: #242422;
+        --border: rgba(255,255,255,0.1);
+        --border-strong: rgba(255,255,255,0.18);
+        --text: #e8e8e4;
+        --text-sec: #a8a8a2;
+        --text-muted: #666660;
+        --accent: #3b82f6;
+        --accent-hover: #60a5fa;
+        --accent-bg: #1e3a5f;
+        --accent-text: #93c5fd;
+        --success: #22c55e;
+        --success-bg: #052e16;
+        --success-text: #4ade80;
+        --warning-bg: #422006;
+        --warning-text: #fbbf24;
+        --danger: #ef4444;
+        --danger-bg: #450a0a;
+        --danger-text: #f87171;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 0.5px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header h1 {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    header .sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+
+    .metric-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
+    .metric-value { font-size: 22px; font-weight: 500; }
+    .metric-value.green { color: var(--success); }
+
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sec {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 10px;
+    }
+
+    .save-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-alt);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      margin-bottom: 1.5rem;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .save-info { font-size: 12px; color: var(--text-muted); }
+    .save-info span { color: var(--success); font-weight: 500; }
+
+    .upload-zone {
+      border: 0.5px dashed var(--border-strong);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      background: var(--surface-alt);
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .upload-zone:hover { background: var(--surface); }
+    .upload-zone input[type=file] { display: none; }
+    .upload-icon { font-size: 36px; color: var(--text-muted); margin-bottom: 8px; display: block; }
+    .upload-label { font-size: 14px; color: var(--text-sec); margin-bottom: 4px; }
+    .upload-hint { font-size: 12px; color: var(--text-muted); }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 7px 10px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: 0.5px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background .12s;
+    }
+
+    .btn:hover { background: var(--surface-alt); }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-danger-outline { color: var(--danger-text); border-color: var(--danger); background: none; }
+    .btn-danger-outline:hover { background: var(--danger-bg); }
+    .btn-upload { background: var(--accent); color: #fff; border: none; border-radius: var(--radius); padding: 9px 20px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-upload:hover { background: var(--accent-hover); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .form-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .form-grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .fg { display: flex; flex-direction: column; gap: 4px; }
+    label { font-size: 12px; color: var(--text-sec); }
+
+    .filters { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .filters input, .filters select { flex: 1; min-width: 120px; }
+
+    .tbl-wrap { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; overflow-x: auto; margin-bottom: 1.5rem; }
+
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    thead th {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      padding: 9px 10px;
+      background: var(--surface-alt);
+      border-bottom: 0.5px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+    tbody td {
+      font-size: 12px;
+      color: var(--text);
+      padding: 8px 10px;
+      border-bottom: 0.5px solid var(--border);
+      vertical-align: middle;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr.ejecutado-row { background: var(--success-bg); }
+
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+    .b-conf { background: var(--success-bg); color: var(--success-text); }
+    .b-accent { background: var(--accent-bg); color: var(--accent-text); }
+
+    .muted { color: var(--text-sec); }
+    .num { text-align: right; font-weight: 500; }
+
+    .btn-sm {
+      background: none;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-sec);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-sm:hover { background: var(--success-bg); color: var(--success-text); border-color: var(--success); }
+    .btn-sm.done { background: var(--success-bg); color: var(--success-text); border-color: var(--success); }
+    .btn-del { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 15px; padding: 3px 5px; border-radius: var(--radius); }
+    .btn-del:hover { background: var(--danger-bg); color: var(--danger-text); }
+
+    tfoot td { font-weight: 500; font-size: 12px; background: var(--surface-alt); border-top: 0.5px solid var(--border-strong); padding: 8px 10px; }
+
+    .empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 14px; }
+
+    .status-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: none; }
+    .status-text { font-size: 13px; color: var(--text-sec); }
+    .preview-img { max-width: 100%; border-radius: var(--radius); border: 0.5px solid var(--border); margin-top: 10px; display: none; }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--surface);
+      border: 0.5px solid var(--success);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--success-text);
+      display: none;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    }
+
+    @media (max-width: 600px) {
+      .form-grid, .form-grid3, .form-grid4 { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <i class="ti ti-ambulance" style="font-size:24px;color:var(--accent)"></i>
+  <div>
+    <h1>Transporte de pacientes</h1>
+    <div class="sub">Registro de servicios y ganancias</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Total servicios</div><div class="metric-value" id="m-count">0</div></div>
+    <div class="metric"><div class="metric-label">Valor total</div><div class="metric-value green" id="m-total">$0</div></div>
+    <div class="metric"><div class="metric-label">Ejecutados</div><div class="metric-value" id="m-exec">0</div></div>
+    <div class="metric"><div class="metric-label">Pendientes cobro</div><div class="metric-value" id="m-pend">$0</div></div>
+  </div>
+
+  <div class="save-bar">
+    <div class="save-info" id="save-info">Sin datos guardados aún</div>
+    <button class="btn btn-danger-outline" onclick="clearAll()">
+      <i class="ti ti-trash"></i> Borrar todos los datos
+    </button>
+  </div>
+
+  <div class="sec">Cargar reporte desde imagen</div>
+  <div class="upload-zone" id="drop-zone" onclick="document.getElementById('img-input').click()">
+    <i class="ti ti-photo-scan upload-icon"></i>
+    <div class="upload-label">Arrastra la imagen del reporte o haz clic para seleccionarla</div>
+    <div class="upload-hint">JPG, PNG, WEBP — el reporte de tu cliente</div>
+    <input type="file" id="img-input" accept="image/*" onchange="handleImage(event)" />
+    <button class="btn-upload" onclick="event.stopPropagation(); document.getElementById('img-input').click()">
+      <i class="ti ti-upload"></i> Seleccionar imagen
+    </button>
+  </div>
+
+  <div class="status-box" id="status-box">
+    <div class="status-text" id="status-text"></div>
+    <img id="preview-img" class="preview-img" alt="Vista previa del reporte" />
+  </div>
+
+  <div class="card">
+    <div class="sec">Agregar servicio manualmente</div>
+    <div class="form-grid">
+      <div class="fg"><label>Nombre paciente</label><input id="f-nombre" placeholder="Nombre completo" /></div>
+      <div class="fg"><label>Municipio</label><input id="f-municipio" placeholder="Ej: Barranquilla" /></div>
+    </div>
+    <div class="form-grid3">
+      <div class="fg"><label>Barrio</label><input id="f-barrio" placeholder="Barrio" /></div>
+      <div class="fg"><label>Origen</label><input id="f-origen" placeholder="Dirección origen" /></div>
+      <div class="fg"><label>Destino</label><input id="f-destino" placeholder="Dirección destino" /></div>
+    </div>
+    <div class="form-grid4">
+      <div class="fg"><label>Hora recogida</label><input id="f-hora-rec" type="time" /></div>
+      <div class="fg"><label>Confirmación</label>
+        <select id="f-estado-conf"><option>CONFIRMADO</option><option>PENDIENTE</option><option>CANCELADO</option></select>
+      </div>
+      <div class="fg"><label>Hora terapia</label><input id="f-hora-ter" type="time" /></div>
+      <div class="fg"><label>Tipo trayecto</label>
+        <select id="f-tipo-tray"><option>Entrada</option><option>Salida</option><option>Ida y vuelta</option></select>
+      </div>
+    </div>
+    <div class="form-grid4">
+      <div class="fg"><label>Veh / Fórmula</label><input id="f-veh" placeholder="Ej: PWK-580" /></div>
+      <div class="fg"><label>Conductor</label><input id="f-conductor" placeholder="Nombre conductor" /></div>
+      <div class="fg"><label>Tipo conductor</label>
+        <select id="f-tipo-cond"><option>Externo</option><option>Interno</option></select>
+      </div>
+      <div class="fg"><label>Valor ($)</label><input id="f-valor" type="number" placeholder="0" min="0" step="1000" /></div>
+    </div>
+    <div style="margin-top:4px">
+      <button class="btn btn-primary" onclick="addRow()">
+        <i class="ti ti-plus"></i> Agregar servicio
+      </button>
+    </div>
+  </div>
+
+  <div class="sec">Historial de servicios</div>
+  <div class="filters">
+    <input id="fi-nombre" placeholder="Buscar paciente…" oninput="render()" />
+    <input id="fi-mun" placeholder="Municipio…" oninput="render()" />
+    <select id="fi-tray" onchange="render()">
+      <option value="">Todos los trayectos</option>
+      <option>Entrada</option><option>Salida</option><option>Ida y vuelta</option>
+    </select>
+    <select id="fi-exec" onchange="render()">
+      <option value="">Todos</option>
+      <option value="ejecutado">Ejecutados</option>
+      <option value="pendiente">Por ejecutar</option>
+    </select>
+    <select id="fi-pago" onchange="render()">
+      <option value="">Todo pago</option>
+      <option value="cobrado">Cobrado</option>
+      <option value="pendiente">Pendiente cobro</option>
+    </select>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Paciente</th><th>Municipio</th><th>Barrio</th><th>Origen</th><th>Destino</th>
+          <th>H. Recogida</th><th>Confirmación</th><th>H. Terapia</th><th>Trayecto</th>
+          <th>Veh</th><th>Conductor</th><th style="text-align:right">Valor</th>
+          <th>Pago</th><th>Estado viaje</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot" style="display:none">
+        <tr>
+          <td colspan="11">Total filtrado</td>
+          <td style="text-align:right;color:var(--success)" id="tfoot-total"></td>
+          <td colspan="3"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><i class="ti ti-check"></i> Guardado</div>
+
+<script>
+  const STORAGE_KEY = 'transporte_servicios_v1';
+  let rows = [];
+  let nextId = 1;
+
+  function fmt(n) {
+    return '$' + Number(n).toLocaleString('es-CO');
+  }
+
+  function showToast() {
+    const t = document.getElementById('toast');
+    t.style.display = 'flex';
+    t.style.alignItems = 'center';
+    t.style.gap = '6px';
+    setTimeout(() => t.style.display = 'none', 1800);
+  }
+
+  function saveData() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ rows, nextId }));
+      const now = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('save-info').innerHTML = `Último guardado: <span>${now}</span> — ${rows.length} servicio(s)`;
+      showToast();
+    } catch (e) {
+      document.getElementById('save-info').textContent = 'Error al guardar';
+    }
+  }
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        rows = parsed.rows || [];
+        nextId = parsed.nextId || rows.length + 1;
+        document.getElementById('save-info').innerHTML = `Datos cargados — <span>${rows.length} servicio(s)</span>`;
+      }
+    } catch (e) {}
+    render();
+  }
+
+  function clearAll() {
+    if (!confirm('¿Borrar todos los servicios? Esta acción no se puede deshacer.')) return;
+    rows = []; nextId = 1;
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById('save-info').textContent = 'Datos eliminados';
+    render();
+  }
+
+  function addRow() {
+    const nombre = document.getElementById('f-nombre').value.trim();
+    const valor = parseFloat(document.getElementById('f-valor').value);
+    if (!nombre || isNaN(valor) || valor <= 0) {
+      alert('Completa al menos el nombre del paciente y el valor.');
+      return;
+    }
+    rows.push({
+      id: nextId++,
+      nombre,
+      municipio: document.getElementById('f-municipio').value.trim(),
+      barrio: document.getElementById('f-barrio').value.trim(),
+      origen: document.getElementById('f-origen').value.trim(),
+      destino: document.getElementById('f-destino').value.trim(),
+      horaRec: document.getElementById('f-hora-rec').value,
+      estadoConf: document.getElementById('f-estado-conf').value,
+      horaTer: document.getElementById('f-hora-ter').value,
+      tipoTray: document.getElementById('f-tipo-tray').value,
+      veh: document.getElementById('f-veh').value.trim(),
+      conductor: document.getElementById('f-conductor').value.trim(),
+      tipoCond: document.getElementById('f-tipo-cond').value,
+      valor,
+      pago: 'pendiente',
+      ejecutado: false
+    });
+    ['f-nombre','f-municipio','f-barrio','f-origen','f-destino','f-hora-rec','f-hora-ter','f-veh','f-conductor','f-valor']
+      .forEach(id => document.getElementById(id).value = '');
+    render();
+    saveData();
+  }
+
+  async function handleImage(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const previewEl = document.getElementById('preview-img');
+    const statusBox = document.getElementById('status-box');
+    const statusText = document.getElementById('status-text');
+    statusBox.style.display = 'block';
+    statusText.textContent = 'Leyendo la imagen…';
+    previewEl.style.display = 'none';
+
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const base64 = ev.target.result.split(',')[1];
+      const mime = file.type || 'image/png';
+      previewEl.src = ev.target.result;
+      previewEl.style.display = 'block';
+      statusText.textContent = 'Analizando el reporte con IA…';
+      try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 1000,
+            messages: [{
+              role: 'user',
+              content: [
+                { type: 'image', source: { type: 'base64', media_type: mime, data: base64 } },
+                { type: 'text', text: `Extrae TODOS los servicios de transporte de pacientes de esta imagen. Responde SOLO con un array JSON válido, sin texto adicional, sin backticks. Cada objeto debe tener: nombre, municipio, barrio, origen, destino, horaRec, estadoConf, horaTer, tipoTray, veh, conductor, tipoCond, valor (número sin símbolos ni puntos de miles), pago ("cobrado" si el trayecto está Ejecutado, sino "pendiente").` }
+              ]
+            }]
+          })
+        });
+        const data = await resp.json();
+        const text = (data.content || []).map(b => b.text || '').join('');
+        const clean = text.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('Sin servicios detectados');
+        parsed.forEach(r => {
+          rows.push({
+            id: nextId++,
+            nombre: r.nombre || '', municipio: r.municipio || '', barrio: r.barrio || '',
+            origen: r.origen || '', destino: r.destino || '',
+            horaRec: r.horaRec || '', estadoConf: r.estadoConf || 'CONFIRMADO',
+            horaTer: r.horaTer || '', tipoTray: r.tipoTray || 'Entrada',
+            veh: r.veh || '', conductor: r.conductor || '', tipoCond: r.tipoCond || 'Externo',
+            valor: parseFloat(String(r.valor).replace(/[^0-9.]/g, '')) || 0,
+            pago: r.pago || 'pendiente', ejecutado: false
+          });
+        });
+        statusText.textContent = `Se importaron ${parsed.length} servicio(s). Guardando…`;
+        render(); saveData();
+      } catch (err) {
+        statusText.textContent = 'No se pudo leer el reporte. Intenta con una imagen más clara. (' + err.message + ')';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const dz = document.getElementById('drop-zone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.background = 'var(--surface)'; });
+  dz.addEventListener('dragleave', () => { dz.style.background = 'var(--surface-alt)'; });
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.style.background = 'var(--surface-alt)';
+    const f = e.dataTransfer.files[0];
+    if (f) handleImage({ target: { files: [f] } });
+  });
+
+  function toggleEjecutado(id) {
+    const r = rows.find(r => r.id === id);
+    if (r) { r.ejecutado = !r.ejecutado; render(); saveData(); }
+  }
+
+  function togglePago(id) {
+    const r = rows.find(r => r.id === id);
+    if (r) { r.pago = r.pago === 'cobrado' ? 'pendiente' : 'cobrado'; render(); saveData(); }
+  }
+
+  function delRow(id) {
+    if (!confirm('¿Eliminar este servicio?')) return;
+    rows = rows.filter(r => r.id !== id);
+    render(); saveData();
+  }
+
+  function getFiltered() {
+    const fn = document.getElementById('fi-nombre').value.toLowerCase();
+    const fm = document.getElementById('fi-mun').value.toLowerCase();
+    const ft = document.getElementById('fi-tray').value;
+    const fe = document.getElementById('fi-exec').value;
+    const fp = document.getElementById('fi-pago').value;
+    return rows.filter(r => {
+      if (fn && !r.nombre.toLowerCase().includes(fn)) return false;
+      if (fm && !r.municipio.toLowerCase().includes(fm)) return false;
+      if (ft && r.tipoTray !== ft) return false;
+      if (fe === 'ejecutado' && !r.ejecutado) return false;
+      if (fe === 'pendiente' && r.ejecutado) return false;
+      if (fp && r.pago !== fp) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    const filtered = getFiltered();
+    const total = rows.reduce((a, r) => a + r.valor, 0);
+    const execCount = rows.filter(r => r.ejecutado).length;
+    const pend = rows.filter(r => r.pago === 'pendiente').reduce((a, r) => a + r.valor, 0);
+    const filtTotal = filtered.reduce((a, r) => a + r.valor, 0);
+
+    document.getElementById('m-count').textContent = rows.length;
+    document.getElementById('m-total').textContent = fmt(total);
+    document.getElementById('m-exec').textContent = execCount;
+    document.getElementById('m-pend').textContent = fmt(pend);
+
+    const tbody = document.getElementById('tbody');
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="15" class="empty">
+        <i class="ti ti-clipboard-list" style="font-size:28px;display:block;margin-bottom:8px;color:var(--text-muted)"></i>
+        ${rows.length === 0 ? 'Carga un reporte con imagen o agrega servicios manualmente' : 'Sin resultados para los filtros aplicados'}
+      </td></tr>`;
+      document.getElementById('tfoot').style.display = 'none';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(r => `
+      <tr class="${r.ejecutado ? 'ejecutado-row' : ''}">
+        <td style="font-weight:500;max-width:130px">${r.nombre}</td>
+        <td class="muted">${r.municipio}</td>
+        <td class="muted" style="font-size:11px">${r.barrio}</td>
+        <td class="muted" style="font-size:11px;max-width:100px">${r.origen}</td>
+        <td class="muted" style="font-size:11px;max-width:100px">${r.destino}</td>
+        <td class="muted">${r.horaRec}</td>
+        <td><span class="badge b-conf">${r.estadoConf}</span></td>
+        <td class="muted">${r.horaTer}</td>
+        <td><span class="badge b-accent">${r.tipoTray}</span></td>
+        <td class="muted">${r.veh}</td>
+        <td style="font-size:11px;max-width:110px">${r.conductor}</td>
+        <td class="num">${fmt(r.valor)}</td>
+        <td>
+          <button class="btn-sm ${r.pago === 'cobrado' ? 'done' : ''}" onclick="togglePago(${r.id})">
+            <i class="ti ti-cash"></i> ${r.pago === 'cobrado' ? 'Cobrado' : 'Cobrar'}
+          </button>
+        </td>
+        <td>
+          <button class="btn-sm ${r.ejecutado ? 'done' : ''}" onclick="toggleEjecutado(${r.id})">
+            <i class="ti ti-${r.ejecutado ? 'check' : 'route'}"></i> ${r.ejecutado ? 'Ejecutado' : 'Ejecutar'}
+          </button>
+        </td>
+        <td><button class="btn-del" onclick="delRow(${r.id})" title="Eliminar"><i class="ti ti-trash"></i></button></td>
+      </tr>
+    `).join('');
+
+    document.getElementById('tfoot').style.display = '';
+    document.getElementById('tfoot-total').textContent = fmt(filtTotal);
+  }
+
+  loadData();
+</script>
+</body>
+</html>
