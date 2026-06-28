@@ -4,187 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Transporte de Pacientes</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f5f5f3;
-      --surface: #ffffff;
-      --surface-alt: #f1f0ec;
-      --border: rgba(0,0,0,0.1);
-      --border-strong: rgba(0,0,0,0.18);
-      --text: #1a1a18;
-      --text-sec: #5f5e5a;
-      --text-muted: #888780;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --accent-bg: #eff6ff;
-      --accent-text: #1e40af;
-      --success: #16a34a;
-      --success-bg: #f0fdf4;
-      --success-text: #15803d;
-      --warning-bg: #fefce8;
-      --warning-text: #854d0e;
-      --danger: #dc2626;
-      --danger-bg: #fef2f2;
-      --danger-text: #b91c1c;
+      --bg: #f5f5f3; --surface: #ffffff; --surface-alt: #f1f0ec;
+      --border: rgba(0,0,0,0.1); --border-strong: rgba(0,0,0,0.18);
+      --text: #1a1a18; --text-sec: #5f5e5a; --text-muted: #888780;
+      --accent: #2563eb; --accent-hover: #1d4ed8; --accent-bg: #eff6ff; --accent-text: #1e40af;
+      --success: #16a34a; --success-bg: #f0fdf4; --success-text: #15803d;
+      --warning-bg: #fefce8; --warning-text: #854d0e;
+      --danger: #dc2626; --danger-bg: #fef2f2; --danger-text: #b91c1c;
       --radius: 8px;
     }
-
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #111110;
-        --surface: #1c1c1a;
-        --surface-alt: #242422;
-        --border: rgba(255,255,255,0.1);
-        --border-strong: rgba(255,255,255,0.18);
-        --text: #e8e8e4;
-        --text-sec: #a8a8a2;
-        --text-muted: #666660;
-        --accent: #3b82f6;
-        --accent-hover: #60a5fa;
-        --accent-bg: #1e3a5f;
-        --accent-text: #93c5fd;
-        --success: #22c55e;
-        --success-bg: #052e16;
-        --success-text: #4ade80;
-        --warning-bg: #422006;
-        --warning-text: #fbbf24;
-        --danger: #ef4444;
-        --danger-bg: #450a0a;
-        --danger-text: #f87171;
+        --bg: #111110; --surface: #1c1c1a; --surface-alt: #242422;
+        --border: rgba(255,255,255,0.1); --border-strong: rgba(255,255,255,0.18);
+        --text: #e8e8e4; --text-sec: #a8a8a2; --text-muted: #666660;
+        --accent: #3b82f6; --accent-hover: #60a5fa; --accent-bg: #1e3a5f; --accent-text: #93c5fd;
+        --success: #22c55e; --success-bg: #052e16; --success-text: #4ade80;
+        --warning-bg: #422006; --warning-text: #fbbf24;
+        --danger: #ef4444; --danger-bg: #450a0a; --danger-text: #f87171;
       }
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--surface);
-      border-bottom: 0.5px solid var(--border);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    header h1 {
-      font-size: 17px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    header .sub {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 17px; font-weight: 500; }
+    header .sub { font-size: 12px; color: var(--text-muted); }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); margin-left: auto; flex-shrink: 0; }
+    .sync-dot.ok { background: var(--success); }
+    .sync-dot.err { background: var(--danger); }
+    .sync-dot.loading { background: var(--accent); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
     .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-bottom: 1.5rem;
-    }
-
-    .metric {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-    }
-
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .metric { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; }
     .metric-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
     .metric-value { font-size: 22px; font-weight: 500; }
     .metric-value.green { color: var(--success); }
-
-    .card {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .sec {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-sec);
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      margin-bottom: 10px;
-    }
-
-    .save-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface-alt);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 8px 14px;
-      margin-bottom: 1.5rem;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
+    .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .sec { font-size: 12px; font-weight: 500; color: var(--text-sec); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px; }
+    .save-bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface-alt); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 8px 14px; margin-bottom: 1.5rem; gap: 12px; flex-wrap: wrap; }
     .save-info { font-size: 12px; color: var(--text-muted); }
     .save-info span { color: var(--success); font-weight: 500; }
-
-    .upload-zone {
-      border: 0.5px dashed var(--border-strong);
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      background: var(--surface-alt);
-      cursor: pointer;
-      transition: background .15s;
-    }
-
+    .upload-zone { border: 0.5px dashed var(--border-strong); border-radius: 12px; padding: 1.5rem; text-align: center; background: var(--surface-alt); cursor: pointer; transition: background .15s; }
     .upload-zone:hover { background: var(--surface); }
     .upload-zone input[type=file] { display: none; }
-    .upload-icon { font-size: 36px; color: var(--text-muted); margin-bottom: 8px; display: block; }
+    .upload-icon { font-size: 32px; color: var(--text-muted); margin-bottom: 8px; display: block; }
     .upload-label { font-size: 14px; color: var(--text-sec); margin-bottom: 4px; }
     .upload-hint { font-size: 12px; color: var(--text-muted); }
-
-    button, input, select, textarea {
-      font-family: inherit;
-      font-size: 13px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 7px 10px;
-      border: 0.5px solid var(--border-strong);
-      border-radius: var(--radius);
-      background: var(--surface);
-      color: var(--text);
-      outline: none;
-    }
-
+    button, input, select { font-family: inherit; font-size: 13px; }
+    input, select { width: 100%; padding: 7px 10px; border: 0.5px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); outline: none; }
     input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: var(--radius);
-      border: 0.5px solid var(--border-strong);
-      background: var(--surface);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background .12s;
-    }
-
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); border: 0.5px solid var(--border-strong); background: var(--surface); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 500; }
     .btn:hover { background: var(--surface-alt); }
     .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn-primary:hover { background: var(--accent-hover); }
@@ -192,103 +67,48 @@
     .btn-danger-outline:hover { background: var(--danger-bg); }
     .btn-upload { background: var(--accent); color: #fff; border: none; border-radius: var(--radius); padding: 9px 20px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; }
     .btn-upload:hover { background: var(--accent-hover); }
-
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .form-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .form-grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .fg { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 12px; color: var(--text-sec); }
-
     .filters { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
     .filters input, .filters select { flex: 1; min-width: 120px; }
-
     .tbl-wrap { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; overflow-x: auto; margin-bottom: 1.5rem; }
-
     table { width: 100%; border-collapse: collapse; min-width: 900px; }
-    thead th {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      padding: 9px 10px;
-      background: var(--surface-alt);
-      border-bottom: 0.5px solid var(--border);
-      text-align: left;
-      white-space: nowrap;
-    }
-    tbody td {
-      font-size: 12px;
-      color: var(--text);
-      padding: 8px 10px;
-      border-bottom: 0.5px solid var(--border);
-      vertical-align: middle;
-    }
+    thead th { font-size: 11px; font-weight: 500; color: var(--text-muted); padding: 9px 10px; background: var(--surface-alt); border-bottom: 0.5px solid var(--border); text-align: left; white-space: nowrap; }
+    tbody td { font-size: 12px; color: var(--text); padding: 8px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr.ejecutado-row { background: var(--success-bg); }
-
     .badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 11px; font-weight: 500; white-space: nowrap; }
     .b-conf { background: var(--success-bg); color: var(--success-text); }
     .b-accent { background: var(--accent-bg); color: var(--accent-text); }
-
     .muted { color: var(--text-sec); }
     .num { text-align: right; font-weight: 500; }
-
-    .btn-sm {
-      background: none;
-      border: 0.5px solid var(--border-strong);
-      border-radius: var(--radius);
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      color: var(--text-sec);
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
+    .btn-sm { background: none; border: 0.5px solid var(--border-strong); border-radius: var(--radius); padding: 3px 10px; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text-sec); white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
     .btn-sm:hover { background: var(--success-bg); color: var(--success-text); border-color: var(--success); }
     .btn-sm.done { background: var(--success-bg); color: var(--success-text); border-color: var(--success); }
     .btn-del { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 15px; padding: 3px 5px; border-radius: var(--radius); }
     .btn-del:hover { background: var(--danger-bg); color: var(--danger-text); }
-
     tfoot td { font-weight: 500; font-size: 12px; background: var(--surface-alt); border-top: 0.5px solid var(--border-strong); padding: 8px 10px; }
-
     .empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 14px; }
-
     .status-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: none; }
     .status-text { font-size: 13px; color: var(--text-sec); }
     .preview-img { max-width: 100%; border-radius: var(--radius); border: 0.5px solid var(--border); margin-top: 10px; display: none; }
-
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--surface);
-      border: 0.5px solid var(--success);
-      border-radius: var(--radius);
-      padding: 10px 16px;
-      font-size: 13px;
-      color: var(--success-text);
-      display: none;
-      z-index: 999;
-      box-shadow: 0 4px 12px rgba(0,0,0,.1);
-    }
-
-    @media (max-width: 600px) {
-      .form-grid, .form-grid3, .form-grid4 { grid-template-columns: 1fr; }
-      .metrics { grid-template-columns: 1fr 1fr; }
-    }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 0.5px solid var(--success); border-radius: var(--radius); padding: 10px 16px; font-size: 13px; color: var(--success-text); display: none; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,.1); align-items: center; gap: 6px; }
+    @media (max-width: 600px) { .form-grid,.form-grid3,.form-grid4 { grid-template-columns: 1fr; } .metrics { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
 
 <header>
-  <i class="ti ti-ambulance" style="font-size:24px;color:var(--accent)"></i>
+  <img src="icon.svg" width="36" height="36" alt="Ícono ambulancia" style="border-radius:8px" />
   <div>
-    <h1>Transporte de pacientes</h1>
+    <h1>Transporte de Pacientes</h1>
     <div class="sub">Registro de servicios y ganancias</div>
   </div>
+  <div class="sync-dot loading" id="sync-dot" title="Estado de conexión"></div>
+  <div style="font-size:11px;color:var(--text-muted)" id="sync-label">Conectando…</div>
 </header>
 
 <div class="container">
@@ -301,10 +121,8 @@
   </div>
 
   <div class="save-bar">
-    <div class="save-info" id="save-info">Sin datos guardados aún</div>
-    <button class="btn btn-danger-outline" onclick="clearAll()">
-      <i class="ti ti-trash"></i> Borrar todos los datos
-    </button>
+    <div class="save-info" id="save-info">Cargando datos…</div>
+    <button class="btn btn-danger-outline" onclick="clearAll()"><i class="ti ti-trash"></i> Borrar todos los datos</button>
   </div>
 
   <div class="sec">Cargar reporte desde imagen</div>
@@ -323,7 +141,7 @@
     <img id="preview-img" class="preview-img" alt="Vista previa del reporte" />
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:1.5rem">
     <div class="sec">Agregar servicio manualmente</div>
     <div class="form-grid">
       <div class="fg"><label>Nombre paciente</label><input id="f-nombre" placeholder="Nombre completo" /></div>
@@ -353,9 +171,7 @@
       <div class="fg"><label>Valor ($)</label><input id="f-valor" type="number" placeholder="0" min="0" step="1000" /></div>
     </div>
     <div style="margin-top:4px">
-      <button class="btn btn-primary" onclick="addRow()">
-        <i class="ti ti-plus"></i> Agregar servicio
-      </button>
+      <button class="btn btn-primary" onclick="addRow()"><i class="ti ti-plus"></i> Agregar servicio</button>
     </div>
   </div>
 
@@ -402,68 +218,113 @@
 
 </div>
 
-<div class="toast" id="toast"><i class="ti ti-check"></i> Guardado</div>
+<div class="toast" id="toast"><i class="ti ti-check"></i> <span id="toast-msg">Guardado</span></div>
 
 <script>
-  const STORAGE_KEY = 'transporte_servicios_v1';
+  // ── Supabase config ──────────────────────────────────────────────
+  const SUPABASE_URL = 'https://odtpwdzrtkfcsuctvngv.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_PJROLrUoO9voSPtm5KOmvA_MwGOfhWx';
+  const API = `${SUPABASE_URL}/rest/v1/servicios`;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Prefer': 'return=representation'
+  };
+
   let rows = [];
-  let nextId = 1;
 
-  function fmt(n) {
-    return '$' + Number(n).toLocaleString('es-CO');
+  // ── Helpers ──────────────────────────────────────────────────────
+  function fmt(n) { return '$' + Number(n).toLocaleString('es-CO'); }
+
+  function setSync(state, label) {
+    const dot = document.getElementById('sync-dot');
+    const lbl = document.getElementById('sync-label');
+    dot.className = 'sync-dot ' + state;
+    lbl.textContent = label;
   }
 
-  function showToast() {
+  function showToast(msg = 'Guardado') {
     const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
     t.style.display = 'flex';
-    t.style.alignItems = 'center';
-    t.style.gap = '6px';
-    setTimeout(() => t.style.display = 'none', 1800);
+    setTimeout(() => t.style.display = 'none', 2000);
   }
 
-  function saveData() {
+  function setSaveInfo(text, highlight) {
+    const el = document.getElementById('save-info');
+    el.innerHTML = highlight ? `${text} — <span>${highlight}</span>` : text;
+  }
+
+  // ── Supabase CRUD ────────────────────────────────────────────────
+  async function loadData() {
+    setSync('loading', 'Cargando…');
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ rows, nextId }));
-      const now = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('save-info').innerHTML = `Último guardado: <span>${now}</span> — ${rows.length} servicio(s)`;
-      showToast();
+      const res = await fetch(`${API}?order=id.asc`, { headers });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      rows = data.map(r => ({
+        id: r.id,
+        nombre: r.nombre || '', municipio: r.municipio || '', barrio: r.barrio || '',
+        origen: r.origen || '', destino: r.destino || '',
+        horaRec: r.hora_rec || '', estadoConf: r.estado_conf || 'CONFIRMADO',
+        horaTer: r.hora_ter || '', tipoTray: r.tipo_tray || 'Entrada',
+        veh: r.veh || '', conductor: r.conductor || '', tipoCond: r.tipo_cond || 'Externo',
+        valor: parseFloat(r.valor) || 0,
+        pago: r.pago || 'pendiente', ejecutado: r.ejecutado || false
+      }));
+      setSync('ok', 'Conectado');
+      setSaveInfo(`${rows.length} servicio(s) cargados`, null);
+      render();
     } catch (e) {
-      document.getElementById('save-info').textContent = 'Error al guardar';
+      setSync('err', 'Sin conexión');
+      setSaveInfo('Error al cargar datos: ' + e.message);
     }
   }
 
-  function loadData() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        rows = parsed.rows || [];
-        nextId = parsed.nextId || rows.length + 1;
-        document.getElementById('save-info').innerHTML = `Datos cargados — <span>${rows.length} servicio(s)</span>`;
-      }
-    } catch (e) {}
-    render();
+  async function insertRow(r) {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        nombre: r.nombre, municipio: r.municipio, barrio: r.barrio,
+        origen: r.origen, destino: r.destino,
+        hora_rec: r.horaRec, estado_conf: r.estadoConf,
+        hora_ter: r.horaTer, tipo_tray: r.tipoTray,
+        veh: r.veh, conductor: r.conductor, tipo_cond: r.tipoCond,
+        valor: r.valor, pago: r.pago, ejecutado: r.ejecutado
+      })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    return data[0];
   }
 
-  function clearAll() {
-    if (!confirm('¿Borrar todos los servicios? Esta acción no se puede deshacer.')) return;
-    rows = []; nextId = 1;
-    localStorage.removeItem(STORAGE_KEY);
-    document.getElementById('save-info').textContent = 'Datos eliminados';
-    render();
+  async function updateRow(id, fields) {
+    const body = {};
+    if ('ejecutado' in fields) body.ejecutado = fields.ejecutado;
+    if ('pago' in fields) body.pago = fields.pago;
+    const res = await fetch(`${API}?id=eq.${id}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(await res.text());
   }
 
-  function addRow() {
+  async function deleteRow(id) {
+    const res = await fetch(`${API}?id=eq.${id}`, { method: 'DELETE', headers });
+    if (!res.ok) throw new Error(await res.text());
+  }
+
+  // ── Actions ──────────────────────────────────────────────────────
+  async function addRow() {
     const nombre = document.getElementById('f-nombre').value.trim();
     const valor = parseFloat(document.getElementById('f-valor').value);
-    if (!nombre || isNaN(valor) || valor <= 0) {
-      alert('Completa al menos el nombre del paciente y el valor.');
-      return;
-    }
-    rows.push({
-      id: nextId++,
-      nombre,
-      municipio: document.getElementById('f-municipio').value.trim(),
+    if (!nombre || isNaN(valor) || valor <= 0) { alert('Completa al menos el nombre y el valor.'); return; }
+    const newRow = {
+      nombre, municipio: document.getElementById('f-municipio').value.trim(),
       barrio: document.getElementById('f-barrio').value.trim(),
       origen: document.getElementById('f-origen').value.trim(),
       destino: document.getElementById('f-destino').value.trim(),
@@ -474,16 +335,67 @@
       veh: document.getElementById('f-veh').value.trim(),
       conductor: document.getElementById('f-conductor').value.trim(),
       tipoCond: document.getElementById('f-tipo-cond').value,
-      valor,
-      pago: 'pendiente',
-      ejecutado: false
-    });
-    ['f-nombre','f-municipio','f-barrio','f-origen','f-destino','f-hora-rec','f-hora-ter','f-veh','f-conductor','f-valor']
-      .forEach(id => document.getElementById(id).value = '');
-    render();
-    saveData();
+      valor, pago: 'pendiente', ejecutado: false
+    };
+    setSync('loading', 'Guardando…');
+    try {
+      const saved = await insertRow(newRow);
+      newRow.id = saved.id;
+      rows.push(newRow);
+      ['f-nombre','f-municipio','f-barrio','f-origen','f-destino','f-hora-rec','f-hora-ter','f-veh','f-conductor','f-valor']
+        .forEach(id => document.getElementById(id).value = '');
+      setSync('ok', 'Conectado');
+      showToast('Servicio guardado');
+      setSaveInfo(`${rows.length} servicio(s)`, null);
+      render();
+    } catch (e) { setSync('err', 'Error al guardar'); alert('Error: ' + e.message); }
   }
 
+  async function toggleEjecutado(id) {
+    const r = rows.find(r => r.id === id);
+    if (!r) return;
+    r.ejecutado = !r.ejecutado;
+    render();
+    try {
+      await updateRow(id, { ejecutado: r.ejecutado });
+      showToast(r.ejecutado ? 'Marcado como ejecutado' : 'Desmarcado');
+    } catch (e) { r.ejecutado = !r.ejecutado; render(); alert('Error: ' + e.message); }
+  }
+
+  async function togglePago(id) {
+    const r = rows.find(r => r.id === id);
+    if (!r) return;
+    r.pago = r.pago === 'cobrado' ? 'pendiente' : 'cobrado';
+    render();
+    try {
+      await updateRow(id, { pago: r.pago });
+      showToast(r.pago === 'cobrado' ? 'Marcado como cobrado' : 'Marcado como pendiente');
+    } catch (e) { r.pago = r.pago === 'cobrado' ? 'pendiente' : 'cobrado'; render(); alert('Error: ' + e.message); }
+  }
+
+  async function delRow(id) {
+    if (!confirm('¿Eliminar este servicio?')) return;
+    rows = rows.filter(r => r.id !== id);
+    render();
+    try {
+      await deleteRow(id);
+      showToast('Eliminado');
+    } catch (e) { await loadData(); alert('Error: ' + e.message); }
+  }
+
+  async function clearAll() {
+    if (!confirm('¿Borrar TODOS los servicios? Esta acción no se puede deshacer.')) return;
+    try {
+      const res = await fetch(`${API}?id=gt.0`, { method: 'DELETE', headers });
+      if (!res.ok) throw new Error(await res.text());
+      rows = [];
+      setSaveInfo('Todos los datos eliminados');
+      showToast('Datos borrados');
+      render();
+    } catch (e) { alert('Error: ' + e.message); }
+  }
+
+  // ── Imagen → IA → Supabase ───────────────────────────────────────
   async function handleImage(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -517,14 +429,17 @@
             }]
           })
         });
-        const data = await resp.json();
-        const text = (data.content || []).map(b => b.text || '').join('');
+        const aiData = await resp.json();
+        const text = (aiData.content || []).map(b => b.text || '').join('');
         const clean = text.replace(/```json|```/g, '').trim();
         const parsed = JSON.parse(clean);
         if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('Sin servicios detectados');
-        parsed.forEach(r => {
-          rows.push({
-            id: nextId++,
+
+        statusText.textContent = `Guardando ${parsed.length} servicio(s) en la nube…`;
+        setSync('loading', 'Guardando…');
+        let added = 0;
+        for (const r of parsed) {
+          const newRow = {
             nombre: r.nombre || '', municipio: r.municipio || '', barrio: r.barrio || '',
             origen: r.origen || '', destino: r.destino || '',
             horaRec: r.horaRec || '', estadoConf: r.estadoConf || 'CONFIRMADO',
@@ -532,11 +447,18 @@
             veh: r.veh || '', conductor: r.conductor || '', tipoCond: r.tipoCond || 'Externo',
             valor: parseFloat(String(r.valor).replace(/[^0-9.]/g, '')) || 0,
             pago: r.pago || 'pendiente', ejecutado: false
-          });
-        });
-        statusText.textContent = `Se importaron ${parsed.length} servicio(s). Guardando…`;
-        render(); saveData();
+          };
+          const saved = await insertRow(newRow);
+          newRow.id = saved.id;
+          rows.push(newRow);
+          added++;
+        }
+        setSync('ok', 'Conectado');
+        statusText.textContent = `✓ Se importaron ${added} servicio(s) y se guardaron en la nube.`;
+        showToast(`${added} servicios importados`);
+        render();
       } catch (err) {
+        setSync('err', 'Error');
         statusText.textContent = 'No se pudo leer el reporte. Intenta con una imagen más clara. (' + err.message + ')';
       }
     };
@@ -552,22 +474,7 @@
     if (f) handleImage({ target: { files: [f] } });
   });
 
-  function toggleEjecutado(id) {
-    const r = rows.find(r => r.id === id);
-    if (r) { r.ejecutado = !r.ejecutado; render(); saveData(); }
-  }
-
-  function togglePago(id) {
-    const r = rows.find(r => r.id === id);
-    if (r) { r.pago = r.pago === 'cobrado' ? 'pendiente' : 'cobrado'; render(); saveData(); }
-  }
-
-  function delRow(id) {
-    if (!confirm('¿Eliminar este servicio?')) return;
-    rows = rows.filter(r => r.id !== id);
-    render(); saveData();
-  }
-
+  // ── Render ───────────────────────────────────────────────────────
   function getFiltered() {
     const fn = document.getElementById('fi-nombre').value.toLowerCase();
     const fm = document.getElementById('fi-mun').value.toLowerCase();
